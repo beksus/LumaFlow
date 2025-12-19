@@ -4,8 +4,8 @@ const members = [
     { name: "Mohammad Shaan", role: "Lead Heuristic Eval" },
     { name: "Izzat Zulqarnain", role: "Usability Testing" },
     { name: "Gavindra Ramadhansyah", role: "Digital Mockup" },
-    { name: "Beksultan Kirgizbaev", role: "Internal Review" },
-    { name: "Dennis Choi", role: "Design Concepts" },
+    { name: "Beksultan Kirgizbaev", role: "Internal Review, Web Development" },
+    { name: "Dennis Choi", role: "Design Concepts, Web Development" },
     { name: "Daryl Tan", role: "Scenarios & Report" }
 ];
 
