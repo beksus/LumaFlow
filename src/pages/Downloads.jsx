@@ -11,7 +11,8 @@ const Downloads = () => {
             <div className="flex flex-col md:flex-row gap-6 justify-center max-w-4xl mx-auto">
                 {/* Poster Link */}
                 <a
-                    href="#"
+                    href="/HCI_Website_Assets/HCI_Poster_A0.jpg"
+                    download="AI-Light_Poster_A0.jpg"
                     className="flex-1 bg-white p-8 rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg hover:border-primary/50 transition-all group"
                 >
                     <div className="flex items-start justify-between mb-8">
@@ -21,7 +22,7 @@ const Downloads = () => {
                         <Download className="text-gray-400 group-hover:text-primary" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">A0 Poster</h3>
-                    <p className="text-gray-500 text-sm">PDF Format</p>
+                    <p className="text-gray-500 text-sm">JPG Format</p>
                 </a>
 
                 {/* Report Link */}
