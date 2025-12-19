@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { ArrowRight, Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
 
 const Home = () => {
     const [isPlaying, setIsPlaying] = useState(true);
@@ -9,6 +9,49 @@ const Home = () => {
     const [volume, setVolume] = useState(1);
     const videoRef = useRef(null);
 
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const updateTime = () => setCurrentTime(video.currentTime);
+        const updateDuration = () => setDuration(video.duration);
+
+        video.addEventListener('timeupdate', updateTime);
+        video.addEventListener('loadedmetadata', updateDuration);
+
+        return () => {
+            video.removeEventListener('timeupdate', updateTime);
+            video.removeEventListener('loadedmetadata', updateDuration);
+        };
+    }, []);
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    const handleSeek = (e) => {
+        const time = parseFloat(e.target.value);
+        if (videoRef.current) {
+            videoRef.current.currentTime = time;
+            setCurrentTime(time);
+        }
+    };
+
+    const toggleFullscreen = () => {
+        if (!document.fullscreenElement) {
+            containerRef.current.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    };
+
+    // Original togglePlay, toggleMute, handleVolumeChange logic remains...
     const togglePlay = () => {
         if (videoRef.current) {
             if (isPlaying) {
@@ -73,6 +116,7 @@ const Home = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                     className="relative w-full max-w-5xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white/50"
+                    ref={containerRef}
                 >
                     <div className="relative group">
                         <video
@@ -97,6 +141,21 @@ const Home = () => {
                                 {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
                             </button>
 
+                            {/* Time Display */}
+                            <span className="text-white text-xs font-mono min-w-[80px]">
+                                {formatTime(currentTime)} / {formatTime(duration)}
+                            </span>
+
+                            {/* Seek Slider */}
+                            <input
+                                type="range"
+                                min="0"
+                                max={duration || 100}
+                                value={currentTime}
+                                onChange={handleSeek}
+                                className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary mx-4"
+                            />
+
                             {/* Volume Controls */}
                             <div className="flex items-center gap-2 group/volume ml-auto">
                                 <button
@@ -115,6 +174,14 @@ const Home = () => {
                                     onChange={handleVolumeChange}
                                     className="w-20 h-1 bg-gray-400 rounded-lg appearance-none cursor-pointer accent-primary"
                                 />
+
+                                {/* Fullscreen Button */}
+                                <button
+                                    onClick={toggleFullscreen}
+                                    className="text-white hover:text-primary transition-colors p-1 ml-2"
+                                >
+                                    <Maximize size={20} />
+                                </button>
                             </div>
                         </div>
                     </div>
